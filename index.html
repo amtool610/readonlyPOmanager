@@ -4,294 +4,290 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Customer & Supplier Project Management</title>
-    <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f7f6;
-            color: #333;
-            line-height: 1.6;
-        }
+  <style>
+/* 🌙 Global Dark Theme */
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #121212;   /* dark background */
+    color: #eaeaea;              /* bright text */
+    line-height: 1.6;
+}
 
-        #app {
-            max-width: 900px;
-            margin: 20px auto;
-            background: #fff;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
+/* Headings */
+h1, h2, h3, h4, h5, h6 {
+    color: #ffffff;
+}
 
-        h2 {
-            color: #2c3e50;
-            border-bottom: 2px solid #e0e0e0;
-            padding-bottom: 10px;
-            margin-bottom: 20px;
-        }
+/* Links */
+a {
+    color: #4dabf7;
+    text-decoration: none;
+}
+a:hover {
+    color: #82c7ff;
+    text-decoration: underline;
+}
 
-        #auth-container, #main-app, #log-container {
-            margin-bottom: 30px;
-        }
+/* Buttons */
+button {
+    background-color: #2a2a2a;
+    color: #f0f0f0;
+    border: 1px solid #444;
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+button:hover {
+    background-color: #3a3a3a;
+    transform: translateY(-2px);
+}
 
-        input, textarea {
-            display: block;
-            margin-bottom: 15px;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            width: calc(100% - 24px);
-            box-sizing: border-box;
-            font-size: 1em;
-        }
+/* Input fields & forms */
+input, select, textarea {
+    background-color: #1a1a1a;
+    color: #f0f0f0;
+    border: 1px solid #444;
+    border-radius: 6px;
+    padding: 8px;
+}
+input::placeholder, textarea::placeholder {
+    color: #888;
+}
 
-        button {
-            background-color: #3498db;
-            color: white;
-            padding: 12px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            margin-right: 10px;
-            font-size: 1em;
-            transition: background-color 0.3s ease;
-        }
+/* Project / Purchase Order Cards */
+.project-item {
+    background-color: #1c1c1c;
+    border: 1px solid #333;
+    border-radius: 10px;
+    padding: 15px;
+    margin: 12px 0;
+    color: #f0f0f0;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.6);
+    opacity: 0; /* fade-in animation */
+    transform: translateY(20px);
+    animation: fadeSlideIn 0.6s ease forwards;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
 
-        button:hover {
-            background-color: #2980b9;
-        }
+.project-item:hover {
+    transform: translateY(-12px) scale(1.1) rotate(-1deg);
+    box-shadow: 0 12px 30px rgba(0, 200, 255, 0.9),
+                0 0 25px rgba(0, 200, 255, 0.7);
+    border-color: #00e0ff;
+}
 
-        .error {
-            color: #e74c3c;
-            margin-top: 10px;
-            font-size: 0.9em;
-        }
+.project-item h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    color: #f0f0f0;
+}
 
-        .project-item {
-            background: #f9f9f9;
-            padding: 20px;
-            margin-bottom: 15px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
+.project-item p {
+    margin: 8px 0;
+    line-height: 1.5;
+    color: #eaeaea;
+}
 
-        .project-item:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-        }
+.project-item .button-group {
+    margin-top: 15px;
+    display: flex;
+    gap: 10px;
+}
 
-        .project-item h3 {
-            margin-top: 0;
-            color: #2c3e50;
-            margin-bottom: 15px;
-        }
+.button-group button {
+    flex: 1;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
 
-        .project-item p {
-            margin: 8px 0;
-            line-height: 1.5;
-        }
+/* Toggle Details Button */
+.project-item .toggle-details-btn {
+    background-color: #2ecc71;
+    color: white;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-bottom: 10px;
+    font-size: 0.9em;
+    transition: background-color 0.3s ease;
+}
+.project-item .toggle-details-btn:hover {
+    background-color: #27ae60;
+}
 
-        .project-item .button-group {
-            margin-top: 15px;
-            display: flex;
-            gap: 10px;
-        }
+/* Edit / Delete buttons hidden */
+.edit-btn, .delete-btn {
+    display: none !important;
+}
 
-        .button-group button {
-            flex: 1;
-            padding: 8px 15px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
+/* Fade-in animation */
+@keyframes fadeSlideIn {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
 
-        .project-item .toggle-details-btn {
-            background-color: #2ecc71;
-            color: white;
-            padding: 8px 12px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            margin-bottom: 10px;
-            font-size: 0.9em;
-            transition: background-color 0.3s ease;
-        }
+/* Tables */
+table {
+    background-color: #1a1a1a;
+    color: #f0f0f0;
+    border-collapse: collapse;
+    width: 100%;
+}
+table th, table td {
+    border: 1px solid #333;
+    padding: 10px;
+}
+table th {
+    background-color: #222;
+    color: #fff;
+}
 
-        .project-item .toggle-details-btn:hover {
-            background-color: #27ae60;
-        }
+/* Modal - Dark Theme */
+#edit-modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.6);
+}
+#edit-modal .modal-content {
+    background-color: #1c1c1c;
+    color: #f0f0f0;
+    margin: 10% auto;
+    padding: 25px;
+    border: 1px solid #333;
+    width: 80%;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.7);
+}
+#edit-modal .modal-content h2 {
+    margin-top: 0;
+}
+#edit-modal .modal-content span {
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    color: #f0f0f0;
+}
 
-        #search-results div {
-            padding: 15px;
-            margin-bottom: 10px;
-            border-bottom: 1px solid #eee;
-            background: #f9f9f9;
-            border-radius: 4px;
-        }
+/* Hide elements as requested */
+#toggle-add-form,
+#add-form-container,
+#total-quotes,
+#total-quotes + label,
+#total-earnings,
+#total-earnings + label,
+#open-log-btn,
+#update-charts-btn,
+#chart-container,
+#company-chart-container,
+#toggle-customer-chart,
+#toggle-company-chart,
+#toggle-urgent-list,
+#toggle-outsource-list,
+#toggle-archive-list,
+#toggle-all-list {
+    display: none !important;
+}
 
-        #edit-modal {
-            display: none;
-            position: fixed;
-            z-index: 1;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0,0,0,0.4);
-        }
+/* Responsive Grid */
+@media screen and (min-width: 768px) {
+    #project-list, #urgent-list, #outsource-list, #archive-list, #rfq-list, #all-list, #search-results {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+        padding: 20px;
+        width: 100%;
+        box-sizing: border-box;
+    }
 
-        #edit-modal .modal-content {
-            background-color: #fff;
-            margin: 10% auto;
-            padding: 25px;
-            border: 1px solid #888;
-            width: 80%;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
+    #app {
+        max-width: 1600px;
+        padding: 20px;
+        margin: 0 auto;
+        width: 95%;
+        box-sizing: border-box;
+    }
 
-        #edit-modal .modal-content h2 {
-            margin-top: 0;
-        }
+   /* 🔥 Flame Effect on Hover */
+.project-item {
+    position: relative; /* needed for pseudo-elements */
+    overflow: hidden;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
 
-        #edit-modal .modal-content span {
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-            cursor: pointer;
-            color: #aaa;
-        }
+.project-item::before {
+    content: '';
+    position: absolute;
+    left: -50%;
+    bottom: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at 50% 50%, rgba(255,140,0,0.4) 0%, transparent 60%),
+                radial-gradient(circle at 60% 40%, rgba(255,69,0,0.3) 0%, transparent 70%),
+                radial-gradient(circle at 40% 60%, rgba(255,215,0,0.2) 0%, transparent 70%);
+    opacity: 0;
+    transform: scale(0.8);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    pointer-events: none;
+    mix-blend-mode: screen; /* makes it blend like fire */
+}
 
-        #log-container {
-            margin: 20px;
-            background: #fff;
-            padding: 25px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
+.project-item:hover::before {
+    opacity: 1;
+    transform: scale(1.1);
+   
+}
 
-        #log-list div {
-            padding: 10px;
-            border-bottom: 1px solid #eee;
-            font-size: 0.95em;
-            color: #555;
-        }
-        #log-list div:last-child {
-            border-bottom: none;
-        }
-        #open-log-btn, #close-log-btn {
-            background-color: #2ecc71;
-        }
-        #open-log-btn:hover, #close-log-btn:hover {
-            background-color: #27ae60;
-        }
+.hidden {
+    display: none !important;
+}
 
-        @media screen and (min-width: 768px) {
-            #project-list, #urgent-list, #outsource-list, #archive-list, #rfq-list, #all-list, #search-results {
-                display: grid;
-                grid-template-columns: repeat(3, 1fr);
-                gap: 20px;
-                padding: 20px;
-                width: 100%;
-                box-sizing: border-box;
-            }
+.grid {
+    display: grid !important;
+}
 
-            .project-item {
-                margin-bottom: 0;
-                height: 100%;
-                min-height: 350px;
-                display: flex;
-                flex-direction: column;
-                background: #f9f9f9;
-                padding: 20px;
-                border-radius: 8px;
-                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-                transition: transform 0.3s ease, box-shadow 0.3s ease;
-                box-sizing: border-box;
-            }
+/* Optional: make the hover card glow more intensely */
+.project-item:hover {
+    transform: translateY(-12px) scale(1.1) rotate(-1deg);
+    box-shadow: 0 12px 30px rgba(255,140,0,0.7),
+                0 0 25px rgba(255,69,0,0.5),
+                0 0 40px rgba(255,215,0,0.3);
+    border-color: #ff8c00;
+}
 
-            #app {
-                max-width: 1600px;
-                padding: 20px;
-                margin: 0 auto;
-                width: 95%;
-                box-sizing: border-box;
-            }
 
-            .project-item h3 {
-                margin-top: 0;
-                margin-bottom: 15px;
-                font-size: 1.2em;
-                color: #2c3e50;
-            }
+    .button-group {
+        margin-top: auto;
+        padding-top: 15px;
+        display: flex;
+        gap: 10px;
+    }
 
-            .project-item p {
-                margin: 8px 0;
-                word-break: break-word;
-                overflow-wrap: break-word;
-                font-size: 0.95em;
-                line-height: 1.4;
-            }
+    /* Pagination container */
+    .pagination-container {
+        grid-column: 1 / -1;
+        display: flex;
+        justify-content: center;
+        padding: 20px 0;
+    }
+}
+</style>
 
-            .project-item .button-group {
-                margin-top: auto;
-                padding-top: 15px;
-                display: flex;
-                gap: 10px;
-            }
-
-            .button-group button {
-                flex: 1;
-                padding: 8px 15px;
-                font-size: 0.9em;
-            }
-
-            #rfq-list, #project-list, #urgent-list, #outsource-list, #archive-list, #all-list {
-                margin-bottom: 30px;
-            }
-
-            #search-results .project-item {
-                min-height: 350px;
-            }
-
-            /* Add pagination container for items beyond 9 */
-            .pagination-container {
-                grid-column: 1 / -1;
-                display: flex;
-                justify-content: center;
-                padding: 20px 0;
-            }
-        }
-
-        .edit-btn, .delete-btn {
-            padding: 8px 15px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        .edit-btn {
-            background-color: #3498db;
-            color: white;
-        }
-
-        .delete-btn {
-            background-color: #e74c3c;
-            color: white;
-        }
-
-        .edit-btn:hover {
-            background-color: #2980b9;
-        }
-
-        .delete-btn:hover {
-            background-color: #c0392b;
-        }
-    </style>
 </head>
 <body>
     <div id="app">
@@ -305,17 +301,20 @@
         </div>
         <div id="main-app" style="display: none;">
             <button id="logout-btn">Logout</button>
+<!--
             <button id="supplier-dashboard-btn" style="background-color: #2ecc71;">Supplier Dashboard</button>
             <h2>Search Purchase Orders</h2>
             <input type="text" id="search-input" placeholder="Search...">
             <div id="search-results"></div>
-            
+ -->           
             <button id="toggle-rfq-list">Show RFQ Orders</button>
             <button id="toggle-project-list">Show Purchase Orders</button>
-            <button id="toggle-urgent-list">Show Urgent Orders</button>
+
+         <button id="toggle-urgent-list">Show Urgent Orders</button>
             <button id="toggle-outsource-list">Show Outsource Orders</button>
             <button id="toggle-archive-list">Show Archived Orders</button>
-            <button id="toggle-all-list">Show All Orders</button>
+            <button id="toggle-all-list">Show All Orders</button> 
+
             <h2>Purchase Orders</h2>
             <div id="rfq-list" style="display: none;"></div>
             <div id="project-list" style="display: none;"></div>
@@ -324,6 +323,7 @@
             <div id="archive-list" style="display: none;"></div>
             <div id="all-list" style="display: none;"></div>
             
+<!-- Hide Top 10 Charts 
             <div style="display: flex; justify-content: space-between; align-items: center;">
                 <h2>Add New Purchase Order</h2>
                 <button id="toggle-add-form" style="background-color: #3498db;">Show Add Form</button>
@@ -383,6 +383,7 @@
         <div id="company-chart-container" style="margin-top: 30px; margin-bottom: 30px;">
             <canvas id="companyChart"></canvas>
         </div>
+-->
     </div>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script type="module">
@@ -463,6 +464,38 @@ const toggleCompanyChartBtn = document.getElementById('toggle-company-chart');
 const chartContainer = document.getElementById('chart-container');
 const companyChartContainer = document.getElementById('company-chart-container');
 const supplierDashboardBtn = document.getElementById('supplier-dashboard-btn');
+
+// Start: RFQ visible, Project hidden
+rfqList.classList.add('grid');
+projectList.classList.add('hidden');
+
+toggleRfqListBtn.addEventListener('click', () => {
+    if (rfqList.classList.contains('hidden')) {
+        rfqList.classList.remove('hidden');
+        rfqList.classList.add('grid');
+
+        projectList.classList.remove('grid');
+        projectList.classList.add('hidden');
+
+        toggleRfqListBtn.textContent = 'Hide RFQ Orders';
+        toggleProjectListBtn.textContent = 'Show Purchase Orders';
+    }
+});
+
+toggleProjectListBtn.addEventListener('click', () => {
+    if (projectList.classList.contains('hidden')) {
+        projectList.classList.remove('hidden');
+        projectList.classList.add('grid');
+
+        rfqList.classList.remove('grid');
+        rfqList.classList.add('hidden');
+
+        toggleProjectListBtn.textContent = 'Hide Purchase Orders';
+        toggleRfqListBtn.textContent = 'Show RFQ Orders';
+    }
+});
+
+
 
 // Initially hide the project list
 projectList.style.display = 'none';
